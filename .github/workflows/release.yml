@@ -28,6 +28,6 @@ jobs:
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
-          files: hysteria_clients-linux
+          files: hysteria_clients_linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
