@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v0.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Rust initiate
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add musl target
+        run: rustup target add x86_64-unknown-linux-musl
+
+      - name: Build binary
+        run: cargo build --release --target x86_64-unknown-linux-musl
+
+      - name: Rename binary
+        run: |
+          mv target/x86_64-unknown-linux-musl/release/hysteria_clients hysteria_clients_linux
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: hysteria_clients-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
