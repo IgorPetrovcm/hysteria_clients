@@ -1,4 +1,4 @@
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, io::Write, path::PathBuf};
 
 // use rand::{Rng, distributions::Alphanumeric};
 
@@ -84,8 +84,29 @@ fn main() {
             backup_file(&contents, &hysteria_path);
 
             std::fs::write(&hysteria_path, new_hysteria_config).expect("Write new hysteria config");
+
+            let domain = &hysteria_config.acme.domains[0];
+
+            let url_link = format!(
+                "hysteria2://{}:{}@{}:{}/?sni={}#{}",
+                client, password, domain, hysteria_config.masquerade.listenHTTPS, domain, client
+            );
+
+            save_hysteria_con_link(&client, &url_link, &app_config.links_output_path);
+            println!("{}: {}", &client, &url_link)
         }
     }
+}
+
+fn save_hysteria_con_link(client: &String, link: &String, path: &String) {
+    let line = format!("{}: {}\n", client, link);
+    std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)
+        .unwrap()
+        .write_all(line.as_bytes())
+        .unwrap()
 }
 
 fn backup_file(contents: &String, path: &String) {
