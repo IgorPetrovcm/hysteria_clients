@@ -66,7 +66,7 @@ fn main() {
             let app_config = load_app_config();
             let hysteria_path = app_config.hysteria_config_path;
 
-            let contents = std::fs::read_to_string(hysteria_path).expect("Read hysteria config");
+            let contents = std::fs::read_to_string(&hysteria_path).expect("Read hysteria config");
 
             let mut hysteria_config: HysteriaConfig =
                 serde_yaml::from_str(&contents).expect("Parse hysteria config");
@@ -81,9 +81,17 @@ fn main() {
             let new_hysteria_config =
                 serde_yaml::to_string(&hysteria_config).expect("Serialize new hysteria config");
 
-            std::fs::write("config.yaml", new_hysteria_config).expect("Write new hysteria config");
+            backup_file(&contents, &hysteria_path);
+
+            std::fs::write(&hysteria_path, new_hysteria_config).expect("Write new hysteria config");
         }
     }
+}
+
+fn backup_file(contents: &String, path: &String) {
+    let mut path_c = path.clone();
+    path_c.push_str(".back");
+    std::fs::write(path_c, contents).expect("Write backup");
 }
 
 fn generate_b64_password() -> String {
