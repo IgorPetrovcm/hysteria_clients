@@ -43,8 +43,8 @@ fn handle_config(cmd: ConfigCommands) {
         }
         ConfigCommands::Set { key, value } => {
             match key.as_str() {
-                "config_path" => config.hysteria_config_path = value,
-                "links_path" => config.links_output_path = value,
+                "hysteria_config_path" => config.hysteria_config_path = value,
+                "links_output_path" => config.links_output_path = value,
                 _ => {
                     eprintln!("Unknown key was incoming");
                     return;
