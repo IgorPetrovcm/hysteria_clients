@@ -129,8 +129,10 @@ fn save_app_config(config: &AppConfig) {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct HysteriaConfig {
+    listen: String,
     auth: HysteriaAuth,
     acme: HysteriaAcme,
+    masquerade: HysteriaMasquerade,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -143,4 +145,15 @@ struct HysteriaAuth {
 #[derive(Debug, Serialize, Deserialize)]
 struct HysteriaAcme {
     domains: Vec<String>,
+    email: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct HysteriaMasquerade {
+    #[serde(rename = "type")]
+    masq_type: String,
+    file: HashMap<String, String>,
+    listenHTTP: String,
+    listenHTTPS: String,
+    forceHTTPS: bool,
 }
